@@ -47,7 +47,7 @@ class doorbell_alert (threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        log("Doorbell rang!")
+        log("event=doorbell_rang")
         
         # Array of snapshots taken and uploaded to S3
         snaps = []
@@ -78,7 +78,7 @@ class doorbell_alert (threading.Thread):
 
             # Send Snapped Images
             for camid, snap in enumerate(snaps):
-                log("sending " + str(camid) + ", url = " + snap + " to " + contact)
+                log("Sending camid=" + str(camid) + ", url=" + snap + " to_phone=" + contact)
 
                 twilio.messages.create(
                     contact,
@@ -87,11 +87,11 @@ class doorbell_alert (threading.Thread):
                     media_url = snap 
                 )
 
-            log("Sent text message to " + contact)
+            log("Sent text message to_phone=" + contact)
 
-        log("Message sending routine complete. Blocking for 10s.")
+        log("event=threadsleep_start status=blocking")
         time.sleep(10)
-        log("timer expired - ready for next ring.")
+        log("event=threadsleep_end status=ready")
 
 
 ###############################################################################
@@ -106,7 +106,7 @@ sdr.gain = 'auto'
 ###############################################################################
 # Main Loop
 ###############################################################################
-log("Main Loop starting...")
+log("event=mainloop_start")
 while True:
     time.sleep(0.05)
     samples = sdr.read_samples(512)

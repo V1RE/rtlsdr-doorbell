@@ -16,11 +16,11 @@ TWILIO_SEND_FROM = ""
 TWILIO_SEND_TO = [
     "",
     "",
-]
+] # phone numbers to send to. Add as many as needed to your array.
 
 # Amcrest DVR
 AMCREST_IP = ""
 AMCREST_USER = ""
 AMCREST_PASS = ""
-AMCREST_CAMERAS = [0,1]
+AMCREST_CAMERAS = [0,1] # Cameras to query. Add more as needed.
 
