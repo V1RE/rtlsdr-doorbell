@@ -56,7 +56,7 @@ class doorbell_alert (threading.Thread):
             # Take a snapshot
             outfile = "doorbell_" + str(camid) + "_" + str(int(time.time())) + ".jpg"
             outfile_tmp = "/tmp/" + outfile
-            camera.snapshot(camid , "/tmp/" + outfile_tmp)
+            camera.snapshot(camid , outfile_tmp)
             log("event=tmp_snapshot tmp_file=\"%s\"" % ( outfile_tmp ) )
 
             # Upload to S3
