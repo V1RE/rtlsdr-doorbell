@@ -47,7 +47,7 @@ class doorbell_alert (threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        log("event=doorbell_rang")
+        log("event=doorbell_alert_run")
         
         # Array of snapshots taken and uploaded to S3
         snaps = []
@@ -55,16 +55,17 @@ class doorbell_alert (threading.Thread):
         for camid in cfg.AMCREST_CAMERAS:
             # Take a snapshot
             outfile = "doorbell_" + str(camid) + "_" + str(int(time.time())) + ".jpg"
-            camera.snapshot(camid , "/tmp/" + outfile)
-            log("Saved camera snapshot to: /tmp/" + outfile)
+            outfile_tmp = "/tmp/" + outfile
+            camera.snapshot(camid , "/tmp/" + outfile_tmp)
+            log("event=tmp_snapshot tmp_file=\"%s\"" % ( outfile_tmp ) )
 
             # Upload to S3
             s3file = Key(bucket)
             s3file.key = outfile
-            s3file.set_contents_from_filename("/tmp/" + outfile)
+            s3file.set_contents_from_filename(outfile_tmp)
             # Get the S3 URL
             s3file_url = s3file.generate_url(expires_in = 60)
-            log("Got S3 URL: " + s3file_url)
+            log("event=s3_upload camera_id=%d s3_url=\"%s\"" % (camid , s3file_url))
             snaps.append(s3file_url)
 
         # Send Text Message to targets
@@ -78,20 +79,20 @@ class doorbell_alert (threading.Thread):
 
             # Send Snapped Images
             for camid, snap in enumerate(snaps):
-                log("Sending camid=" + str(camid) + ", url=" + snap + " to_phone=" + contact)
-
                 twilio.messages.create(
                     contact,
-                    body = "Camera #" + str(camid) + " - " + str(datetime.now()),
+                    body = "Camera #%d @ %s" % (camid, datetime.now()),
                     from_ = cfg.TWILIO_SEND_FROM,
                     media_url = snap 
                 )
+                log("event=send_mms to_phone=\"%s\" camera_id=\"%d\"" % (contact, camid))
 
-            log("Sent text message to_phone=" + contact)
 
-        log("event=threadsleep_start status=blocking")
+        log("event=threadsleep_start")
         time.sleep(10)
-        log("event=threadsleep_end status=ready")
+        log("event=threadsleep_end")
+        log("event=doorbell_alert_exit")
+        return
 
 
 ###############################################################################
