@@ -40,7 +40,7 @@ You'll need API credentials for the Amcrest cameras, AWS (IAM role will need to 
 2. When a spike is detected, a thread is kicked off.
 3. Thread loops through the specified cameras, saving the snapshots to `/tmp`.
 4. Snapshots are uploaded to an S3 bucket.
-5. Thread loops through the specified phone numbers, texing an intro message and each of the snapshots via Twilio's messaging API. 
+5. Thread loops through the specified phone numbers, texting an intro message and each of the snapshots via Twilio's messaging API. 
 
 
 
