@@ -6,6 +6,9 @@ matplotlib.use('Agg')
 from datetime import datetime
 from rtlsdr import *
 from matplotlib.pyplot import psd
+from notify_run import Notify
+
+notify = Notify()
 
 ###############################################################################
 # Logging Helper Function
@@ -24,6 +27,7 @@ class doorbell_alert (threading.Thread):
     def run(self):
         log("event=doorbell_alert_run")
         log("event=threadsleep_start")
+        notify.send('🔔 Ding Dong 🔔')
         time.sleep(10)
         log("event=threadsleep_end")
         log("event=doorbell_alert_exit")
@@ -44,6 +48,7 @@ sdr.gain = 'auto'
 # Main Loop
 ###############################################################################
 log("event=mainloop_start")
+notify.send('Doorbell listening active')
 while True:
     time.sleep(0.05)
     samples = sdr.read_samples(512)
