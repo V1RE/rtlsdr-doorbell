@@ -29,16 +29,15 @@ class doorbell_alert (threading.Thread):
         log("event=doorbell_alert_exit")
         return
 
-
 ###############################################################################
 # RTLSDR Setup
 ###############################################################################
 serial_numbers = RtlSdr.get_device_serial_addresses()
 log(str(serial_numbers))
 sdr = RtlSdr(serial_number='00000001')
-sdr.sample_rate = 2.048e6 #2.048e6  # Hz
+sdr.sample_rate = 2.048e6
 sdr.center_freq = 433.0e6
-sdr.freq_correction = 60   # PPM
+sdr.freq_correction = 60
 sdr.gain = 'auto'
 
 ###############################################################################
